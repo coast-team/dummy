@@ -13,17 +13,42 @@ class CollaboratorConfigLoader(object):
         default_config = {}
 
         try:
-            default_config['chromeLocation'] = self.__parser['DEFAULT'][
-                 'chromeLocation']
-            default_config['chromeDriverLocation'] = self.__parser['DEFAULT'][
-                 'chromeDriverLocation']
-            default_config['waitingTime'] = self.__parser['DEFAULT'][
-                 'waitingTime']
-            default_config['url'] = self.__parser['DEFAULT']['url']
+            default_config['port'] = int(self.__parser['DEFAULT']['port'])
+            if 'address' in self.__parser['DEFAULT']:
+                default_config['address'] = self.__parser['DEFAULT']['address']
             return default_config
         except KeyError:
+            print('Une clé est manquante dans le fichier de config')
             print("Une erreur s'est produite dans la section DEFAULT")
             raise ConfigfileError()
+        except ValueError:
+            print("une valeur est incorrecte")
+            print("Une erreur s'est produite dans la section DEFAULT")
+            raise ConfigfileError()
+
+    def getCollaboratorConfig(self):
+        collab_config = {}
+
+        try:
+            collab_config['chromeLocation'] = self.__parser['COLLABORATOR'][
+                 'chromeLocation']
+            collab_config['chromeDriverLocation'] = self.__parser[
+                'COLLABORATOR']['chromeDriverLocation']
+            collab_config['waitingTime'] = int(self.__parser['COLLABORATOR'][
+                 'waitingTime'])
+            collab_config['url'] = self.__parser['COLLABORATOR']['url']
+            collab_config['loadingTime'] = int(self.__parser['COLLABORATOR'][
+                'loadingTime'])
+        except KeyError:
+            print('Une clé est manquante dans le fichier de config')
+            print("Une erreur s'est produite dans la section COLLABORATOR")
+            raise ConfigfileError()
+        except ValueError:
+            print("une valeur est incorrecte")
+            print("Une erreur s'est produite dans la section COLLABORATOR")
+            raise ConfigfileError()
+
+        return collab_config
 
     def getMuteConfig(self):
         mute_config = {}
@@ -41,7 +66,13 @@ class CollaboratorConfigLoader(object):
             if mute_config['refreshRate']:
                 mute_config['writingSpeed'] = int(self.__parser['MUTE']
                                                   ['writingSpeed'])
-            return mute_config
         except KeyError:
+            print('Une clé est manquante dans le fichier de config')
             print("Une erreur s'est produite dans la section MUTE")
             raise ConfigfileError()
+        except ValueError:
+            print("une valeur est incorrecte")
+            print("Une erreur s'est produite dans la section MUTE")
+            raise ConfigfileError()
+
+        return mute_config

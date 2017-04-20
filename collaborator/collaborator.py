@@ -12,31 +12,34 @@ class Collaborator(threading.Thread):
         threading.Thread.__init__(self)
         self._id = id
         self._configurationLoader = CollaboratorConfigLoader(path_to_config)
-        self._config = self._configurationLoader.getDefaultConfig()
+        self._config = self._configurationLoader.getCollaboratorConfig()
 
     def getDriver(self):
         driver = None
 
-        if self._config:
-            chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument("--no-sandbox")
-            chrome_options.binary_location = self._config['chromeLocation']
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.binary_location = self._config['chromeLocation']
 
-            d = DesiredCapabilities.CHROME
-            d['loggingPrefs'] = {"driver": "ALL", "server": "ALL",
-                                 "browser": "ALL"}
+        d = DesiredCapabilities.CHROME
+        d['loggingPrefs'] = {"driver": "ALL", "server": "ALL",
+                             "browser": "ALL"}
 
-            service_args = ["--verbose"]
+        service_args = ["--verbose"]
 
-            driver = webdriver.Chrome(
-                self._config['chromeDriverLocation'],
-                chrome_options=chrome_options,
-                desired_capabilities=d,
-                service_args=service_args)
+        driver = webdriver.Chrome(
+            self._config['chromeDriverLocation'],
+            chrome_options=chrome_options,
+            desired_capabilities=d,
+            service_args=service_args)
 
-            driver.get(self._config['url'])
-            time.sleep(2)
-        else:
-            print("Erreur de configuration")
+        driver.get(self._config['url'])
+        time.sleep(self._config['loadingTime'])
 
         return driver
+
+    def getConfig(self):
+        config = {}
+        config['status'] = 'RUNNING'
+        config['url_targeted'] = self._config['url']
+        return config

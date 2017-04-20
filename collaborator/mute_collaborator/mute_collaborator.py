@@ -30,6 +30,15 @@ class MuteCollaborator(Collaborator):
                                                 self.__config_mute[
                                                     'writingSpeed'])
 
+    def getConfig(self):
+        config = super(MuteCollaborator, self).getConfig()
+
+        config['collaborator'] = 'Mute Collaborator'
+        config['writing_speed'] = self.__config_mute['writingSpeed']
+        config['refresh_rate'] = self.__config_mute['refreshRate']
+
+        return config
+
     def run(self):
         self.__mute_reader.start()
         self.__mute_writer.start()
@@ -39,6 +48,6 @@ class MuteCollaborator(Collaborator):
         self.__mute_writer.join()
 
     def killReader(self):
-        time.sleep(10)
+        time.sleep(self._config['waitingTime'])
         self.__mute_reader.kill()
         self.__mute_reader.join()
