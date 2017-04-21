@@ -3,7 +3,7 @@ import configparser
 import os
 
 
-class CollaboratorConfigLoader(object):
+class ConfigLoader(object):
     """docstring for CollaboratorConfigLoader."""
     def __init__(self, path_to_config):
         self.__parser = configparser.ConfigParser()
@@ -32,6 +32,8 @@ class CollaboratorConfigLoader(object):
         try:
             collab_config['chromeLocation'] = self.__parser['COLLABORATOR'][
                  'chromeLocation']
+            collab_config['noDisplay'] = self.__parser[
+                'COLLABORATOR'].getboolean('noDisplay')
             collab_config['chromeDriverLocation'] = self.__parser[
                 'COLLABORATOR']['chromeDriverLocation']
             collab_config['waitingTime'] = int(self.__parser['COLLABORATOR'][
