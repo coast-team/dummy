@@ -1,5 +1,6 @@
 import requests
 import sys
+import time
 
 if len(sys.argv) < 2:
     sys.exit('Usage: %s host-address' % sys.argv[0])
@@ -23,6 +24,10 @@ addr3 = host + '/start/mute/collaborator'
 print(addr3)
 r3 = requests.put(addr3)
 print(r3.text)
+
+print(" Waiting 60s")
+time.sleep(60)
+
 
 print("TEST ---- stop a collaborator")
 addr4 = host + '/stop-writing/mute/collaborator'
