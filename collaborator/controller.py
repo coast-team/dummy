@@ -1,4 +1,4 @@
-from collaborator.collaborator_config_loader import CollaboratorConfigLoader
+from collaborator.config_loader import ConfigLoader
 from collaborator.dummy_error.configfile_error import ConfigfileError
 from collaborator.mute_collaborator.mute_collaborator import MuteCollaborator
 import sys
@@ -21,7 +21,7 @@ class Controller(object):
         self.__collaborator = None
         self.__config = {}
         try:
-            self.__configurationLoader = CollaboratorConfigLoader(
+            self.__configurationLoader = ConfigLoader(
                 path_to_config)
             self.__config = self.__configurationLoader.getDefaultConfig()
 
