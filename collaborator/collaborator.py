@@ -1,7 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from collaborator.collaborator_config_loader import CollaboratorConfigLoader
+from collaborator.config_loader import ConfigLoader
 from collaborator.dummy_error.configfile_error import ConfigfileError
+from pyvirtualdisplay import Display
+from easyprocess import EasyProcessCheckInstalledError
 import threading
 import time
 
@@ -11,8 +13,16 @@ class Collaborator(threading.Thread):
     def __init__(self, id, path_to_config):
         threading.Thread.__init__(self)
         self._id = id
-        self._configurationLoader = CollaboratorConfigLoader(path_to_config)
+        self._configurationLoader = ConfigLoader(path_to_config)
         self._config = self._configurationLoader.getCollaboratorConfig()
+        self.__display = None
+        if self._config['noDisplay']:
+            try:
+                self.__display = Display(visible=0, size=(800, 600))
+                self.__display.start()
+            except EasyProcessCheckInstalledError:
+                self.__display = None
+                print("L'environnement Xvfb n'est pas installé")
 
     def getDriver(self):
         driver = None
@@ -43,3 +53,6 @@ class Collaborator(threading.Thread):
         config['status'] = 'RUNNING'
         config['url_targeted'] = self._config['url']
         return config
+
+    def stopDisplay(self):
+        self.__display.stop()
