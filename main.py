@@ -5,7 +5,7 @@ import os
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        path_to_config = os.getenv('CONFIG_PATH', './example.ini')
+        path_to_config = os.getenv('CONFIG_PATH', './config_files/example.ini')
     else:
         path_to_config = sys.argv[1]
 

@@ -1,7 +1,6 @@
 from flask import Flask, jsonify
 from flask_api import status
 from collaborator.controller import Controller
-import netifaces as ni
 
 app = Flask(__name__)
 
@@ -44,13 +43,4 @@ def entryPoint(path_to_config):
     if not config or 'port' not in config:
         config['port'] = DEFAULT_PORT
 
-    if 'address' not in config:
-        # Get the right interface
-        gws = ni.gateways()
-        interface = gws['default'][2][1]
-
-        ni.ifaddresses(interface)
-        ip_addr = ni.ifaddresses(interface)[2][0]['addr']
-        config['address'] = ip_addr
-
-    app.run(port=config['port'], host=config['address'])
+    app.run(port=config['port'], host='0.0.0.0')
