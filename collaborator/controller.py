@@ -9,6 +9,7 @@ RUNNING = 'Running'
 COLLABORATOR_INSTANCIATED = 'Collaborator is instanciated'
 COLLABORATOR_PROCESSING = 'Collaborator is processing'
 COLLABORATOR_BEING_STOP = 'Collaborator is being stoped'
+COLLABORATOR_STOP = 'Collaborator has been stoped'
 CONFIG_FILE_ERROR = 'File is not well formatted'
 
 
@@ -60,7 +61,7 @@ class Controller(object):
     def startMuteCollaborator(self):
         response = {}
         if self.__summary['status'] != COLLABORATOR_INSTANCIATED:
-            response = self.createMuteCollaborator
+            response = self.createMuteCollaborator()
             if self.__collaborator is None:
                 return response
         self.__collaborator.start()
@@ -86,7 +87,7 @@ class Controller(object):
         if(self.__collaborator is not None
            and self.__summary['status'] == COLLABORATOR_BEING_STOP):
             self.__collaborator.killReader()
-            self.__summary['status'] = COLLABORATOR_BEING_STOP
+            self.__summary['status'] = COLLABORATOR_STOP
         else:
             response['error'] = 'Collaborator is not ready yet'
 
