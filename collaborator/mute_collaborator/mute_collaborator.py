@@ -15,8 +15,8 @@ class MuteCollaborator(Collaborator):
         reader_driver = self.getDriver()
         writer_driver = self.getDriver()
 
-        reader_record_path = self.__config_mute['readerRecordPath'] + str(id)
-        writer_record_path = self.__config_mute['writerRecordPath'] + str(id)
+        reader_record_path = self.__config_mute['readerRecordPath']
+        writer_record_path = self.__config_mute['writerRecordPath']
 
         self.__mute_reader = MuteReadComponent(
             self.__config_mute['refreshRate'],
@@ -51,3 +51,9 @@ class MuteCollaborator(Collaborator):
         time.sleep(self._config['waitingTime'])
         self.__mute_reader.kill()
         self.__mute_reader.join()
+
+    def getTracesPath(self):
+        traces_path = []
+        traces_path.append(self.__config_mute['readerRecordPath'])
+        traces_path.append(self.__config_mute['writerRecordPath'])
+        return traces_path

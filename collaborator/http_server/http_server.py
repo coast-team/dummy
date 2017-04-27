@@ -1,13 +1,12 @@
 from flask import Flask, jsonify
 from flask_api import status
-from collaborator.controller import Controller
 
 app = Flask(__name__)
 
 DEFAULT_PORT = 5000
 
 
-def entryPoint(path_to_config):
+def entryPoint(controller):
 
     @app.route('/get/status', methods=['GET'])
     def getStatus():
@@ -35,9 +34,8 @@ def entryPoint(path_to_config):
 
     @app.route('/retrieve/mute/collaborator/records', methods=['GET'])
     def retrieveMuteCollabRecords():
-        return jsonify({'status': 'Not yet implemented'})
+        return jsonify(controller.retrieveMuteCollabRecords())
 
-    controller = Controller(path_to_config)
     config = controller.getConfig()
 
     if not config or 'port' not in config:

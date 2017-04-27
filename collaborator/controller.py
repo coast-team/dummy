@@ -96,5 +96,12 @@ class Controller(object):
         return response
 
     def retrieveMuteCollabRecords(self):
-        response = {}
-        pass
+        traces_path = self.__collaborator.getTracesPath()
+        resp = {}
+        traces = []
+        for path in traces_path:
+            with open(path, 'r') as trace:
+                lines = [line.strip('\n') for line in trace.readlines()]
+                traces.append(lines)
+        resp['traces'] = traces
+        return resp
