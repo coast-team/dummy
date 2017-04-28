@@ -5,6 +5,7 @@ import time
 if len(sys.argv) < 2:
     sys.exit('Usage: %s host-address' % sys.argv[0])
 
+
 host = sys.argv[1]
 
 print("TEST ---- Status")
@@ -26,7 +27,7 @@ r3 = requests.put(addr3)
 print(r3.text)
 
 print(" Waiting 60s")
-time.sleep(60)
+time.sleep(10)
 
 
 print("TEST ---- stop a collaborator")
@@ -39,3 +40,8 @@ addr5 = host + '/stop-reading/mute/collaborator'
 print(addr5)
 r5 = requests.put(addr5)
 print(r5.text)
+
+addr6 = host + '/retrieve/mute/collaborator/records'
+print(addr6)
+r6 = requests.get(addr6)
+print(r6.text)
