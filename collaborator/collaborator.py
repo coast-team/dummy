@@ -15,13 +15,16 @@ class Collaborator(threading.Thread):
         self._id = id
         self._configurationLoader = ConfigLoader(path_to_config)
         self._config = self._configurationLoader.getCollaboratorConfig()
+        print(self._config)
         self.__display = None
+        self._errors = []
         if self._config['noDisplay']:
             try:
                 self.__display = Display(visible=0, size=(800, 600))
                 self.__display.start()
             except EasyProcessCheckInstalledError:
                 self.__display = None
+                self._errors.append('Xvfb is not installed')
                 print("L'environnement Xvfb n'est pas installé")
 
     def getDriver(self):
@@ -36,13 +39,11 @@ class Collaborator(threading.Thread):
                              "browser": "ALL"}
 
         service_args = ["--verbose"]
-
         driver = webdriver.Chrome(
             self._config['chromeDriverLocation'],
             chrome_options=chrome_options,
             desired_capabilities=d,
             service_args=service_args)
-
         driver.get(self._config['url'])
         time.sleep(self._config['loadingTime'])
 
@@ -52,7 +53,14 @@ class Collaborator(threading.Thread):
         config = {}
         config['status'] = 'RUNNING'
         config['url_targeted'] = self._config['url']
+        config['errors'] = self._errors
         return config
+
+    def reportError(self, msg):
+        self._errors.append(msg)
+
+    def getErrors(self):
+        return self._errors
 
     def stopDisplay(self):
         self.__display.stop()

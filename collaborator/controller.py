@@ -67,6 +67,7 @@ class Controller(object):
         self.__collaborator.start()
         self.__summary['status'] = COLLABORATOR_PROCESSING
         response['status'] = 'Collaborator is starting'
+        response['collaborator-errors'] = self.__collaborator.getErrors()
         return response
 
     def stopWritingMuteCollaborator(self):
@@ -75,11 +76,11 @@ class Controller(object):
            and self.__summary['status'] == COLLABORATOR_PROCESSING):
             self.__collaborator.killWriter()
             self.__summary['status'] = COLLABORATOR_BEING_STOP
+            response['collaborator-errors'] = self.__collaborator.getErrors()
         else:
-            response['error'] = 'Collaborator is not ready'
+            response['controller-error'] = 'Collaborator is not ready'
 
         response['status'] = self.__summary['status']
-
         return response
 
     def stopReadingMuteCollaborator(self):
@@ -96,12 +97,19 @@ class Controller(object):
         return response
 
     def retrieveMuteCollabRecords(self):
+        response = {}
+        response['status'] = self.__summary['status']
+
+        if self.__collaborator is None:
+            response['error'] = 'Collaborator is not ready yet'
+            return response
+
         traces_path = self.__collaborator.getTracesPath()
-        resp = {}
         traces = []
+
         for path in traces_path:
             with open(path, 'r') as trace:
                 lines = [line.strip('\n') for line in trace.readlines()]
                 traces.append(lines)
-        resp['traces'] = traces
-        return resp
+        response['traces'] = traces
+        return response

@@ -15,5 +15,7 @@ if __name__ == '__main__':
     if not os.path.exists(path_to_config):
         sys.exit("Path to config file : %s doesn't exist" % path_to_config)
 
+    print("Loading from %s" % path_to_config)
+
     controller = Controller(path_to_config)
     entryPoint(controller)

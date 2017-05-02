@@ -19,12 +19,14 @@ class MuteCollaborator(Collaborator):
         writer_record_path = self.__config_mute['writerRecordPath']
 
         self.__mute_reader = MuteReadComponent(
+            self,
             self.__config_mute['refreshRate'],
             reader_driver,
             self.__config_mute['splitter'],
             reader_record_path)
 
-        self.__mute_writer = MuteWriteComponent(writer_driver,
+        self.__mute_writer = MuteWriteComponent(self,
+                                                writer_driver,
                                                 self.__config_mute['splitter'],
                                                 writer_record_path,
                                                 self.__config_mute[

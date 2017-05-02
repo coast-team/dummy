@@ -1,4 +1,5 @@
 import collaborator.utils.utils as utils
+import selenium
 import threading
 import time
 import hashlib
@@ -7,8 +8,10 @@ import difflib
 
 class MuteReadComponent(threading.Thread):
     """docstring for MuteReadComponent."""
-    def __init__(self, refresh_rate, driver, splitter, path_to_record):
+    def __init__(self, mute_collaborator, refresh_rate, driver, splitter,
+                 path_to_record):
         threading.Thread.__init__(self)
+        self.__mute_collaborator = mute_collaborator
         self.__refresh_rate = refresh_rate / 1000.0
         self.__driver = driver
         self.__splitter = splitter
@@ -22,16 +25,22 @@ class MuteReadComponent(threading.Thread):
 
     def run(self):
         self.__alive = True
-        while self.__alive:
-            content = self.__driver.execute_script(
-                "return muteTest.getText(0)")
-            timestamp = str(utils.getTime())
-            self.readContent(content, timestamp)
-            time.sleep(self.__refresh_rate)
+        try:
+            while self.__alive:
+                content = self.__driver.execute_script(
+                    "return muteTest.getText(0)")
+                timestamp = str(utils.getTime())
+                self.readContent(content, timestamp)
+                time.sleep(self.__refresh_rate)
 
-        utils.saveRecords(self.__path_to_record, self.__records)
-        utils.writeLine(self.__path_to_record, 'HASH %s' % self.__last_hash)
-        self.__driver.close()
+            utils.saveRecords(self.__path_to_record, self.__records)
+            utils.writeLine(self.__path_to_record,
+                            'HASH %s' % self.__last_hash)
+        except selenium.common.exceptions.WebDriverException:
+            self.__mute_collaborator.reportError(
+                '[Mute-reader] Webdriver Error')
+        finally:
+            self.__driver.close()
 
     def kill(self):
         self.__alive = False

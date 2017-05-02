@@ -36,6 +36,9 @@ class ConfigLoader(object):
                 'COLLABORATOR'].getboolean('noDisplay')
             collab_config['chromeDriverLocation'] = self.__parser[
                 'COLLABORATOR']['chromeDriverLocation']
+            if not os.path.exists(collab_config['chromeDriverLocation']):
+                print("Le chemin vers le webdriver est incorrecte")
+                raise ConfigfileError()
             collab_config['waitingTime'] = int(self.__parser['COLLABORATOR'][
                  'waitingTime'])
             collab_config['url'] = self.__parser['COLLABORATOR']['url']
