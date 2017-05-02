@@ -27,10 +27,13 @@ class Controller(object):
             self.__config = self.__configurationLoader.getDefaultConfig()
 
             self.__summary['status'] = RUNNING
-        except ConfigfileError as e:
+        except ConfigfileError as e1:
             print("Erreur lors du chargement du fichier de config")
             self.__summary['status'] = CONFIG_FILE_ERROR
-            self.__summary['error_msg'] = str(e)
+            self.__summary['error_msg'] = str(e1)
+        except WebdriverError as e2:
+            self.__summary['status'] = CONFIG_FILE_ERROR
+            self.__summary['controller-error'] = str(e1)
 
     def getConfig(self):
         return self.__config
@@ -78,7 +81,8 @@ class Controller(object):
             self.__summary['status'] = COLLABORATOR_BEING_STOP
             response['collaborator-errors'] = self.__collaborator.getErrors()
         else:
-            response['controller-error'] = 'Collaborator is not ready'
+            self.__summary['controller-error'] = 'Collaborator is not ready'
+            response['controller-error'] = self.__summary['controller-error']
 
         response['status'] = self.__summary['status']
         return response
@@ -90,7 +94,8 @@ class Controller(object):
             self.__collaborator.killReader()
             self.__summary['status'] = COLLABORATOR_STOP
         else:
-            response['error'] = 'Collaborator is not ready yet'
+            self.__summary['controller-error'] = 'Collaborator is not ready'
+            response['controller-error'] = self.__summary['controller-error']
 
         response['status'] = self.__summary['status']
 
