@@ -1,11 +1,13 @@
 from collaborator.config_loader import ConfigLoader
 from collaborator.dummy_error.configfile_error import ConfigfileError
+from collaborator.dummy_error.webdriver_error import WebdriverError
 from collaborator.mute_collaborator.mute_collaborator import MuteCollaborator
 import sys
 import uuid
 
 NOT_INITIALIZED = 'Not yet initialized'
 RUNNING = 'Running'
+WEBDRIVER_ERROR = 'Webdriver is not available'
 COLLABORATOR_INSTANCIATED = 'Collaborator is instanciated'
 COLLABORATOR_PROCESSING = 'Collaborator is processing'
 COLLABORATOR_BEING_STOP = 'Collaborator is being stoped'
@@ -32,7 +34,7 @@ class Controller(object):
             self.__summary['status'] = CONFIG_FILE_ERROR
             self.__summary['error_msg'] = str(e1)
         except WebdriverError as e2:
-            self.__summary['status'] = CONFIG_FILE_ERROR
+            self.__summary['status'] = WEBDRIVER_ERROR
             self.__summary['controller-error'] = str(e1)
 
     def getConfig(self):
@@ -54,9 +56,13 @@ class Controller(object):
             self.__summary['status'] = COLLABORATOR_INSTANCIATED
 
             response = self.__collaborator.getConfig()
-        except ConfigfileError:
+        except ConfigfileError as e1:
             self.__collaborator = None
             self.__summary['status'] = CONFIG_FILE_ERROR
+            self.__summary['error_msg'] = str(e1)
+        except WebdriverError as e2:
+            self.__summary['status'] = WEBDRIVER_ERROR
+            self.__summary['controller-error'] = str(e2)
 
             response['status'] = self.__summary['status']
         return response
@@ -106,7 +112,8 @@ class Controller(object):
         response['status'] = self.__summary['status']
 
         if self.__collaborator is None:
-            response['error'] = 'Collaborator is not ready yet'
+            self.__summary['controller-error'] = 'Collaborator is not ready'
+            response['controller-error'] = self.__summary['controller-error']
             return response
 
         traces_path = self.__collaborator.getTracesPath()

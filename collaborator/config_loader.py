@@ -1,4 +1,5 @@
 from collaborator.dummy_error.configfile_error import ConfigfileError
+from collaborator.dummy_error.webdriver_error import WebdriverError
 import configparser
 import os
 
@@ -38,7 +39,7 @@ class ConfigLoader(object):
                 'COLLABORATOR']['chromeDriverLocation']
             if not os.path.exists(collab_config['chromeDriverLocation']):
                 print("Le chemin vers le webdriver est incorrecte")
-                raise ConfigfileError()
+                raise WebdriverError()
             collab_config['waitingTime'] = int(self.__parser['COLLABORATOR'][
                  'waitingTime'])
             collab_config['url'] = self.__parser['COLLABORATOR']['url']
