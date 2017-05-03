@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import collaborator.utils.utils as utils
 import selenium
 import threading
@@ -19,7 +20,7 @@ class MuteReadComponent(threading.Thread):
         self.__alive = False
         self.__last_hash = ""
         self.__last_content = [""]
-        self.__records = {}
+        self.__records = OrderedDict()
         utils.clearFile(self.__path_to_record)
         utils.writeLine(self.__path_to_record, 'READER')
 
@@ -36,6 +37,15 @@ class MuteReadComponent(threading.Thread):
             utils.saveRecords(self.__path_to_record, self.__records)
             utils.writeLine(self.__path_to_record,
                             'HASH %s' % self.__last_hash)
+            utils.saveLogs(self.__path_to_record,
+                           'browser',
+                           self.__driver.get_log('browser'))
+            utils.saveLogs(self.__path_to_record,
+                           'driver',
+                           self.__driver.get_log('driver'))
+            utils.saveLogs(self.__path_to_record,
+                           'server',
+                           self.__driver.get_log('server'))
         except selenium.common.exceptions.WebDriverException:
             self.__mute_collaborator.reportError(
                 '[Mute-reader] Webdriver Error')
@@ -54,6 +64,7 @@ class MuteReadComponent(threading.Thread):
 
             diff = difflib.ndiff(self.__last_content, split_content)
             record = utils.basicShape(diff)
+            print(str(timestamp) + ' ' + str(record))
             self.__records[timestamp] = record
 
             self.__last_hash = hash_content

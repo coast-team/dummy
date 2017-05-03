@@ -38,3 +38,22 @@ def saveRecords(path, records):
         for timestamp, record in records.items():
             for diff in record:
                 records_file.write(str(timestamp) + ' ' + diff + '\n')
+
+
+def generateWord(rank, word, size):
+    content = str(rank) + str(word)
+    hash_content_object = hashlib.md5(content.encode())
+    hash_content = hash_content_object.hexdigest()
+    return hash_content[:size] + '|'
+
+
+def saveLogs(path, suffix, log_entries):
+    path = '-'.join([path, suffix, 'logs'])
+    clearFile(path)
+    with open(path, 'a') as log_file:
+        for entry in log_entries:
+            log_file.write(
+                str(entry['timestamp']) +
+                ' ' + str(entry['level']) +
+                ' ' + str(entry['message']) +
+                '\n')
