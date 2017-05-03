@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/coast-team/dummy.svg?branch=master)](https://travis-ci.org/coast-team/dummy)
 
 ## How to run the bot
-At this time, there are to way for running and dealing with the bot (dummy):
+At this time, there are to way for dealing with the bot (dummy):
 * Use of HTTP API (C&C server)  : easier way
 * Use of API exposed by controller module
 
