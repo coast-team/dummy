@@ -15,7 +15,6 @@ class Collaborator(threading.Thread):
         self._id = id
         self._configurationLoader = ConfigLoader(path_to_config)
         self._config = self._configurationLoader.getCollaboratorConfig()
-        print(self._config)
         self.__display = None
         self._errors = []
         if self._config['noDisplay']:
@@ -24,7 +23,7 @@ class Collaborator(threading.Thread):
                 self.__display.start()
             except EasyProcessCheckInstalledError:
                 self.__display = None
-                self._errors.append('Xvfb is not installed')
+                self.reportError('Xvfb is not installed')
                 print("L'environnement Xvfb n'est pas installé")
 
     def getDriver(self):
