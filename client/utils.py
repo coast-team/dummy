@@ -1,5 +1,22 @@
 import requests
 import json
+import threading
+
+PATH = '/tmp/'
+
+
+def parallelize(func, collab_type, addresses):
+    supervisors = []
+    for address in addresses:
+        supervisor = threading.Thread(target=func,
+                                      args=(address, collab_type))
+        supervisors.append(supervisor)
+
+    for supervisor in supervisors:
+        supervisor.start()
+
+    for supervisor in supervisors:
+        supervisor.join()
 
 
 def try_connection(func):

@@ -24,35 +24,23 @@ class Client(object):
 
     def createCollaborator(self):
         print("=== Creating %s collaborators ===" % self.__collab_type)
-
-        supervisors = []
-        for address in self.__addresses:
-            supervisor = threading.Thread(target=utils.create_collab,
-                                          args=(address,
-                                                self.__collab_type))
-            supervisors.append(supervisor)
-
-        for supervisor in supervisors:
-            supervisor.start()
-
-        for supervisor in supervisors:
-            supervisor.join()
+        utils.parallelize(utils.create_collab, self.__collab_type,
+                          self.__addresses)
 
     def startCollaborator(self):
         print("=== Starting %s collaborators ===" % self.__collab_type)
-
-        for address in self.__addresses:
-            utils.start_collab(address, self.__collab_type)
+        utils.parallelize(utils.start_collab, self.__collab_type,
+                          self.__addresses)
 
     def stopwritingCollaborator(self):
         print("=== Stoping (writers) %s collaborators ==="
               % self.__collab_type)
-
-        for address in self.__addresses:
-            utils.stopwriting_collab(address, self.__collab_type)
+        utils.parallelize(utils.stopwriting_collab, self.__collab_type,
+                          self.__addresses)
 
     def stopreadingCollaborator(self):
         print("=== Stoping (readers) %s collaborators ==="
               % self.__collab_type)
-        for address in self.__addresses:
-            utils.stopreading_collab(address, self.__collab_type)
+        utils.parallelize(utils.stopreading_collab, self.__collab_type,
+                          self.__addresses)
+
