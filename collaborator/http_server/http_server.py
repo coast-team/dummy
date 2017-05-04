@@ -26,15 +26,18 @@ def entryPoint(controller):
 
     @app.route('/stop-writing/mute/collaborator', methods=['PUT'])
     def stopWritingMuteCollaborator():
-        return jsonify(controller.stopWritingMuteCollaborator())
+        return jsonify(controller.stopWritingMuteCollaborator()),
+        status.HTTP_200_OK
 
     @app.route('/stop-reading/mute/collaborator', methods=['PUT'])
     def stopReadingMuteCollaborator():
-        return jsonify(controller.stopReadingMuteCollaborator())
+        return jsonify(controller.stopReadingMuteCollaborator()),
+        status.HTTP_200_OK
 
     @app.route('/retrieve/mute/collaborator/records', methods=['GET'])
     def retrieveMuteCollabRecords():
-        return jsonify(controller.retrieveMuteCollabRecords())
+        return jsonify(controller.retrieveMuteCollabRecords()),
+        status.HTTP_200_OK
 
     config = controller.getConfig()
 
