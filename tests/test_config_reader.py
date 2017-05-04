@@ -1,5 +1,6 @@
 from collaborator.config_loader import ConfigLoader
 from collaborator.dummy_error.configfile_error import ConfigfileError
+from collaborator.dummy_error.webdriver_error import WebdriverError
 import pytest
 import os
 
@@ -42,6 +43,8 @@ def test_load_collaborator_config():
         result = config_loader.getCollaboratorConfig()
     except ConfigfileError:
         assert False
+    except WebdriverError:
+        assert False
     else:
         assert True
 
@@ -79,6 +82,8 @@ def test_load_collaborator_failures():
     try:
         config_loader.getCollaboratorConfig()
     except ConfigfileError:
+        assert True
+    except WebdriverError:
         assert True
     else:
         assert False
