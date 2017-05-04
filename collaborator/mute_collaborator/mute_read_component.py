@@ -46,9 +46,9 @@ class MuteReadComponent(threading.Thread):
             utils.saveLogs(self.__path_to_record,
                            'server',
                            self.__driver.get_log('server'))
-        except selenium.common.exceptions.WebDriverException:
+        except selenium.common.exceptions.WebDriverException as e:
             self.__mute_collaborator.reportError(
-                '[Mute-reader] Webdriver Error')
+                '[Mute-reader] Webdriver Error : %s' % e)
         finally:
             self.__driver.close()
 
@@ -64,7 +64,6 @@ class MuteReadComponent(threading.Thread):
 
             diff = difflib.ndiff(self.__last_content, split_content)
             record = utils.basicShape(diff)
-            print(str(timestamp) + ' ' + str(record))
             self.__records[timestamp] = record
 
             self.__last_hash = hash_content

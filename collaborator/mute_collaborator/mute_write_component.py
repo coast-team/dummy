@@ -56,9 +56,9 @@ class MuteWriteComponent(threading.Thread):
             utils.saveLogs(self.__path_to_record,
                            'server',
                            self.__driver.get_log('server'))
-        except selenium.common.exceptions.WebDriverException:
+        except selenium.common.exceptions.WebDriverException as e:
             self.__mute_collaborator.reportError(
-                '[Mute-writer] Webdriver Error')
+                '[Mute-writer] Webdriver Error : %s' % e)
         finally:
             self.__driver.close()
 
