@@ -17,7 +17,7 @@ class Client(object):
         return ip_addresses
 
     def getStatus(self):
-        print("=== Get Status ===")
+        print("=== Getting Status ===")
 
         for address in self.__addresses:
             utils.get_status(address)
@@ -44,3 +44,7 @@ class Client(object):
         utils.parallelize(utils.stopreading_collab, self.__collab_type,
                           self.__addresses)
 
+    def retrieveDocument(self):
+        print("=== Retrieving documents ===")
+        utils.parallelize(utils.retrieve_records, self.__collab_type,
+                          self.__addresses)

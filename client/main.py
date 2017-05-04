@@ -17,6 +17,7 @@ if __name__ == '__main__':
     client.createCollaborator()
     client.startCollaborator()
     print('sleeping...')
-    time.sleep(10)
+    time.sleep(180)
     client.stopwritingCollaborator()
     client.stopreadingCollaborator()
+    client.retrieveDocument()
