@@ -34,8 +34,7 @@ class Collaborator(threading.Thread):
         chrome_options.binary_location = self._config['chromeLocation']
 
         d = DesiredCapabilities.CHROME
-        d['loggingPrefs'] = {"driver": "ALL", "server": "ALL",
-                             "browser": "ALL"}
+        d['loggingPrefs'] = {"driver": "ALL", "browser": "ALL"}
 
         service_args = ["--verbose"]
         driver = webdriver.Chrome(
