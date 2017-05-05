@@ -12,10 +12,8 @@ def parallelize(func, collab_type, addresses):
     for address in addresses:
         supervisor = threading.Thread(target=func,
                                       args=(address, collab_type))
-        supervisors.append(supervisor)
-
-    for supervisor in supervisors:
         supervisor.start()
+        supervisors.append(supervisor)
 
     for supervisor in supervisors:
         supervisor.join()
