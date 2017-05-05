@@ -48,7 +48,7 @@ class MuteReadComponent(threading.Thread):
                            self.__driver.get_log('server'))
         except selenium.common.exceptions.WebDriverException as e:
             self.__mute_collaborator.reportError(
-                '[Mute-reader] Webdriver Error : %s' % e)
+                '[Mute-reader] Webdriver Error : %s' % str(e))
         finally:
             self.__driver.close()
 
