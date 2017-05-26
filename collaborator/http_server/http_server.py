@@ -12,31 +12,36 @@ def entryPoint(controller):
     def getStatus():
         return jsonify(controller.getStatus()), status.HTTP_200_OK
 
-    @app.route('/get/mute/collaborator/status', methods=['GET'])
-    def getMuteCollaboratorStatus():
+    @app.route('/get/<collaborator_type>/collaborator/status', methods=['GET'])
+    def getCollaboratorStatus(collaborator_type):
         pass
 
-    @app.route('/create/mute/collaborator', methods=['POST'])
-    def createMuteCollaborator():
-        return jsonify(controller.createMuteCollaborator()), status.HTTP_200_OK
-
-    @app.route('/start/mute/collaborator', methods=['PUT'])
-    def startMuteCollaborator():
-        return jsonify(controller.startMuteCollaborator()), status.HTTP_200_OK
-
-    @app.route('/stop-writing/mute/collaborator', methods=['PUT'])
-    def stopWritingMuteCollaborator():
-        return jsonify(controller.stopWritingMuteCollaborator()),
+    @app.route('/create/<collaborator_type>/collaborator', methods=['POST'])
+    def createCollaborator(collaborator_type):
+        return jsonify(controller.createCollaborator(collaborator_type)),
         status.HTTP_200_OK
 
-    @app.route('/stop-reading/mute/collaborator', methods=['PUT'])
-    def stopReadingMuteCollaborator():
-        return jsonify(controller.stopReadingMuteCollaborator()),
+    @app.route('/start/<collaborator_type>/collaborator', methods=['PUT'])
+    def startCollaborator(collaborator_type):
+        return jsonify(controller.startCollaborator(collaborator_type)),
         status.HTTP_200_OK
 
-    @app.route('/retrieve/mute/collaborator/records', methods=['GET'])
-    def retrieveMuteCollabRecords():
-        return jsonify(controller.retrieveMuteCollabRecords()),
+    @app.route('/stop-writing/<collaborator_type>/collaborator',
+               methods=['PUT'])
+    def stopWritingCollaborator(collaborator_type):
+        return jsonify(controller.stopWritingCollaborator(collaborator_type)),
+        status.HTTP_200_OK
+
+    @app.route('/stop-reading/<collaborator_type>/collaborator',
+               methods=['PUT'])
+    def stopReadingMuteCollaborator(collaborator_type):
+        return jsonify(controller.stopReadingCollaborator(collaborator_type)),
+        status.HTTP_200_OK
+
+    @app.route('/retrieve/<collaborator_type>/collaborator/records',
+               methods=['GET'])
+    def retrieveMuteCollabRecords(collaborator_type):
+        return jsonify(controller.retrieveCollabRecords(collaborator_type)),
         status.HTTP_200_OK
 
     config = controller.getConfig()

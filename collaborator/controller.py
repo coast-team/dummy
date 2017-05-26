@@ -1,7 +1,7 @@
 from collaborator.config_loader import ConfigLoader
 from collaborator.dummy_error.configfile_error import ConfigfileError
 from collaborator.dummy_error.webdriver_error import WebdriverError
-from collaborator.mute_collaborator.mute_collaborator import MuteCollaborator
+from collaborator.collab_factory import CollaboratorFactory
 import sys
 import uuid
 
@@ -21,8 +21,10 @@ class Controller(object):
         self.__path_to_config = path_to_config
         self.__id = str(uuid.uuid4())
         self.__summary = {'status': NOT_INITIALIZED}
+        self.__collab_factory = CollaboratorFactory()
         self.__collaborator = None
         self.__config = {}
+
         try:
             self.__configurationLoader = ConfigLoader(
                 path_to_config)
@@ -43,16 +45,14 @@ class Controller(object):
     def getStatus(self):
         return self.__summary
 
-    """
-    MUTE Collaborator interactions
-    """
-
-    def createMuteCollaborator(self):
+    def createCollaborator(self, collab_type):
         response = {}
 
         try:
-            self.__collaborator = MuteCollaborator(self.__path_to_config,
-                                                   self.__id)
+            self.__collaborator = self.__collab_factory.createCollaborator(
+                collab_type,
+                self.__path_to_config,
+                self.__id)
             self.__summary['status'] = COLLABORATOR_INSTANCIATED
 
             response = self.__collaborator.getConfig()
@@ -67,10 +67,10 @@ class Controller(object):
             response['status'] = self.__summary['status']
         return response
 
-    def startMuteCollaborator(self):
+    def startCollaborator(self, collab_type):
         response = {}
         if self.__summary['status'] != COLLABORATOR_INSTANCIATED:
-            response = self.createMuteCollaborator()
+            response = self.createCollaborator(collab_type)
             if self.__collaborator is None:
                 return response
         self.__collaborator.start()
@@ -79,7 +79,7 @@ class Controller(object):
         response['collaborator-errors'] = self.__collaborator.getErrors()
         return response
 
-    def stopWritingMuteCollaborator(self):
+    def stopWritingCollaborator(self, collab_type):
         response = {}
         if(self.__collaborator is not None
            and self.__summary['status'] == COLLABORATOR_PROCESSING):
@@ -93,7 +93,7 @@ class Controller(object):
         response['status'] = self.__summary['status']
         return response
 
-    def stopReadingMuteCollaborator(self):
+    def stopReadingCollaborator(self, collab_type):
         response = {}
         if(self.__collaborator is not None
            and self.__summary['status'] == COLLABORATOR_BEING_STOP):
@@ -107,7 +107,7 @@ class Controller(object):
 
         return response
 
-    def retrieveMuteCollabRecords(self):
+    def retrieveCollabRecords(self, collab_type):
         response = {}
         response['status'] = self.__summary['status']
 
