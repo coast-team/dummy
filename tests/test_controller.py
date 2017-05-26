@@ -5,13 +5,19 @@ from mock import Mock
 import os
 import pytest
 
+COLLAB_TYPES = ['mute']
 
 path_to_config_suffix = '/config_files/config_test_success.ini'
 
 """
+Mock : Collaborator
+"""
+def trivial():
+    pass
+
+"""
 Mock : Mute Collaborator
 """
-
 
 @pytest.fixture
 def get_mute_config():
@@ -22,19 +28,6 @@ def get_mute_config():
         "url_targeted": "http://www.coedit.re/doc/toto",
         "writing_speed": 5
         }
-
-
-def start_mute():
-    pass
-
-
-def kill_reader_mute():
-    pass
-
-
-def kill_writer_mute():
-    pass
-
 
 """
 Fixtures
@@ -49,18 +42,19 @@ def get_path_to_config_file():
 
 @pytest.fixture
 def get_mute_collaborator():
-    path_to_config = get_path_to_config_file()
-    return Mock(spec=MuteCollaborator)
+    mocked_mute = Mock(spec=MuteCollaborator)
+    mocked_mute.getConfig = get_mute_config
+    mocked_mute.start = trivial
+    mocked_mute.killWriter = trivial
+    mocked_mute.killReader = trivial
+    return mocked_mute
 
 
 @pytest.fixture
 def get_contoroller(monkeypatch, get_mute_collaborator):
     mute_collab = Mock(return_value=get_mute_collaborator)
-    monkeypatch.setattr('collaborator.controller.MuteCollaborator',
+    monkeypatch.setattr('collaborator.collab_factory.MuteCollaborator',
                         mute_collab)
-
-    get_mute_collaborator.getConfig = get_mute_config
-    get_mute_collaborator.start = start_mute
 
     path_to_config = get_path_to_config_file()
     return Controller(path_to_config)
@@ -69,7 +63,6 @@ def get_contoroller(monkeypatch, get_mute_collaborator):
 """
 TESTS
 """
-
 
 def test_controller(monkeypatch, get_mute_collaborator):
     controller = get_contoroller(monkeypatch, get_mute_collaborator)
@@ -80,29 +73,37 @@ def test_controller(monkeypatch, get_mute_collaborator):
     status = controller.getStatus()
     assert status['status'] == 'Running'
 
-
-def test_createMuteCollaborator(monkeypatch, get_mute_collaborator):
+@pytest.mark.parametrize("collab_type", COLLAB_TYPES)
+def test_createMuteCollaborator(monkeypatch, get_mute_collaborator, collab_type):
     controller = get_contoroller(monkeypatch, get_mute_collaborator)
-    res = controller.createMuteCollaborator()
-    assert res['collaborator'] == 'Mute Collaborator'
-    assert res['refresh_rate'] == 500
-    assert res['url_targeted'] == "http://www.coedit.re/doc/toto"
-    assert res['writing_speed'] == 5
 
+    if collab_type == 'mute':
+        expected = get_mute_config()
+    else :
+        expected = get_mute_config() #Mute collaborator is the default collaborator
 
-def test_startMuteCollaborator(monkeypatch, get_mute_collaborator):
+    res = controller.createCollaborator(collab_type)
+
+    assert res['collaborator'] == expected['collaborator']
+    assert res['refresh_rate'] == expected['refresh_rate']
+    assert res['url_targeted'] == expected['url_targeted']
+    assert res['writing_speed'] == expected['writing_speed']
+
+@pytest.mark.parametrize("collab_type", COLLAB_TYPES)
+def test_startMuteCollaborator(monkeypatch, get_mute_collaborator, collab_type):
     controller = get_contoroller(monkeypatch, get_mute_collaborator)
-    res = controller.startMuteCollaborator()
+
+    res = controller.startCollaborator(collab_type)
     assert res['status'] == "Collaborator is starting"
 
     controller = get_contoroller(monkeypatch, get_mute_collaborator)
-    controller.createMuteCollaborator()
-    res = controller.startMuteCollaborator()
+    controller.createCollaborator(collab_type)
+    res = controller.startCollaborator(collab_type)
     assert res['status'] == "Collaborator is starting"
 
-
-def test_stopWritingMuteCollaborator(monkeypatch, get_mute_collaborator):
+@pytest.mark.parametrize("collab_type", COLLAB_TYPES)
+def test_stopWritingMuteCollaborator(monkeypatch, get_mute_collaborator, collab_type):
     controller = get_contoroller(monkeypatch, get_mute_collaborator)
-    controller.startMuteCollaborator()
-    res = controller.stopWritingMuteCollaborator()
+    controller.startCollaborator(collab_type)
+    res = controller.stopWritingCollaborator(collab_type)
     assert res['status'] == "Collaborator is being stoped"
