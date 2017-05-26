@@ -92,3 +92,4 @@ ENV/
 reader*
 writer*
 test
+*traces*
