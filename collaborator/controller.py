@@ -47,7 +47,6 @@ class Controller(object):
 
     def createCollaborator(self, collab_type):
         response = {}
-
         try:
             self.__collaborator = self.__collab_factory.createCollaborator(
                 collab_type,

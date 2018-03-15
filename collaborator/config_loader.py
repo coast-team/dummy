@@ -81,5 +81,23 @@ class ConfigLoader(object):
             print("une valeur est incorrecte")
             print("Une erreur s'est produite dans la section MUTE")
             raise ConfigfileError()
-
+        
         return mute_config
+
+    def getMuteClusterConfig(self):
+        mute_cluster_config = {}
+
+        try:
+            mute_cluster_config['clusterSize'] = int(self.__parser['MUTE-CLUSTER'][
+                'clusterSize'])
+        
+        except KeyError:
+            print('Une clé est manquante dans le fichier de config')
+            print("Une erreur s'est produite dans la section MUTE")
+            raise ConfigfileError()
+        except ValueError:
+            print("une valeur est incorrecte")
+            print("Une erreur s'est produite dans la section MUTE")
+            raise ConfigfileError()
+
+        return mute_cluster_config

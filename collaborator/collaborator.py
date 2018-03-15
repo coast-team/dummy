@@ -31,7 +31,7 @@ class Collaborator(threading.Thread):
 
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--no-sandbox")
-        # chrome_options.binary_location = self._config['chromeLocation']
+        chrome_options.binary_location = self._config['chromeLocation']
 
         d = DesiredCapabilities.CHROME
         d['loggingPrefs'] = {"driver": "ALL", "browser": "ALL"}
@@ -63,3 +63,9 @@ class Collaborator(threading.Thread):
     def stopDisplay(self):
         print("ert")
         self.__display.stop()
+
+    def killReader(self):
+        pass
+    
+    def killWriter(self):
+        pass
