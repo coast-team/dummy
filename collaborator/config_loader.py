@@ -1,7 +1,8 @@
-from collaborator.dummy_error.configfile_error import ConfigfileError
-from collaborator.dummy_error.webdriver_error import WebdriverError
 import configparser
 import os
+
+from collaborator.dummy_error.configfile_error import ConfigfileError
+from collaborator.dummy_error.webdriver_error import WebdriverError
 
 
 class ConfigLoader(object):

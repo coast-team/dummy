@@ -8,7 +8,7 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:
         cwd = os.getcwd()
         path_to_config = os.getenv('CONFIG_PATH',
-                                   cwd + '/config_files/example.ini')
+                                   cwd + '/config_files/example_mac.ini')
     else:
         path_to_config = sys.argv[1]
 
